@@ -1,6 +1,6 @@
 services:
   tts-v3:
-    image: ghcr.io/bmv234/TTS-v3:latest
+    image: ghcr.io/bmv234/tts-v3:latest
     container_name: tts-v3
     ports:
       - "5000:5000"
