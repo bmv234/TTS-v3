@@ -50,7 +50,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-tts-v3
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -90,7 +90,7 @@ jobs:
           
           services:
             tts-v3:
-              image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-tts-v3:latest
+              image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
               container_name: tts-v3
               ports:
                 - "5000:5000"
