@@ -1,0 +1,36 @@
+services:
+  tts-v3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tts-v3:latest
+    container_name: tts-v3
+    ports:
+      - "5000:5000"
+    volumes:
+      - ..:/app/parent
+      - ../csm:/app/csm
+      - huggingface_cache:/app/.cache/huggingface
+    environment:
+      - NO_TORCH_COMPILE=1
+      - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+      - DEFAULT_DEVICE=cuda
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    command: ["python3", "server.py"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  huggingface_cache:
+    driver: local

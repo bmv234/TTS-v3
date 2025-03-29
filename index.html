@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSM Text to Speech</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-mode">
+    <div class="container">
+        <div class="controls-top">
+            <h1>CSM Text to Speech</h1>
+            <button id="darkModeToggle" class="toggle-btn">
+                <span class="toggle-icon">🌙</span>
+            </button>
+        </div>
+        
+        <div class="input-container">
+            <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+        </div>
+
+        <div class="controls">
+            <div class="voice-container">
+                <label for="voiceSelect">Speaker</label>
+                <select id="voiceSelect" class="voice-select">
+                    <option value="SPEAKER_0">Speaker 0</option>
+                    <option value="SPEAKER_1">Speaker 1</option>
+                    <option value="SPEAKER_2">Speaker 2</option>
+                    <option value="SPEAKER_3">Speaker 3</option>
+                </select>
+            </div>
+
+            <button id="playButton" class="control-btn">
+                <span class="btn-icon">▶</span>
+            </button>
+            
+            <div class="slider-container">
+                <label for="volumeControl">Volume</label>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
+            </div>
+
+            <div class="slider-container">
+                <label for="speedControl">Speed</label>
+                <input type="range" id="speedControl" min="0.5" max="2" step="0.1" value="1">
+            </div>
+            
+            <div class="settings-toggle">
+                <button id="settingsButton" class="settings-btn">
+                    <span class="btn-icon">⚙️</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="highlightedText" class="highlighted-text">
+            <p class="initial-message">Enter text above and click play to generate speech.</p>
+        </div>
+        
+        <div id="progressContainer" class="progress-container hidden">
+            <div class="progress-bar-wrapper">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <div id="progressText" class="progress-text">Processing...</div>
+        </div>
+        
+        <div id="settingsPanel" class="settings-panel hidden">
+            <h3>Memory Settings</h3>
+            <div class="settings-row">
+                <label for="deviceSelect">Device:</label>
+                <select id="deviceSelect" class="settings-select">
+                    <option value="cuda">GPU (CUDA)</option>
+                    <option value="cpu">CPU</option>
+                </select>
+            </div>
+            <div class="settings-row">
+                <label for="memoryOptimization">Memory Optimization:</label>
+                <input type="checkbox" id="memoryOptimization" checked>
+                <span class="checkbox-label">Enable (recommended for 8GB GPU)</span>
+            </div>
+            <div class="settings-row">
+                <button id="applySettings" class="control-btn">Apply</button>
+                <div id="settingsStatus" class="settings-status"></div>
+            </div>
+            <p class="settings-info">Note: If you experience "Out of Memory" errors, switch to CPU or enable memory optimization.</p>
+        </div>
+        
+        <div class="info-panel">
+            <h3>About CSM Text-to-Speech</h3>
+            <p>This application uses the Conversational Speech Model (CSM) to generate natural-sounding speech from text.</p>
+            <p>CSM is designed to maintain speaker identity and conversational context, providing high-quality speech synthesis.</p>
+            <p>Different speaker IDs can be selected to generate speech with different voice characteristics.</p>
+            <p><strong>Note:</strong> Speech generation may take 1-2 minutes on CPU. Please be patient during processing.</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

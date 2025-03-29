@@ -1,0 +1,338 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --primary-color: #4a90e2;
+    --secondary-color: #f0f0f0;
+    --highlight-color: #ffd700;
+    --panel-color: #f8f8f8;
+    --border-color: #e0e0e0;
+    --settings-bg: rgba(240, 240, 240, 0.95);
+    --settings-border: #cccccc;
+    --progress-bg: #e0e0e0;
+    --progress-fill: #4a90e2;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --secondary-color: #2d2d2d;
+    --panel-color: #2a2a2a;
+    --border-color: #444444;
+    --settings-bg: rgba(40, 40, 40, 0.95);
+    --settings-border: #555555;
+    --progress-bg: #444444;
+    --progress-fill: #4a90e2;
+}
+
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.controls-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.voice-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 200px;
+}
+
+.voice-select {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--primary-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.voice-select:hover {
+    border-color: var(--primary-color);
+}
+
+.voice-select option {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.toggle-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.input-container {
+    margin-bottom: 1rem;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 1rem;
+    border: 2px solid var(--secondary-color);
+    border-radius: 8px;
+    resize: vertical;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.controls {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.control-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    min-width: 48px;
+    transition: background-color 0.2s;
+}
+
+.control-btn:hover {
+    opacity: 0.9;
+}
+
+.control-btn:active {
+    transform: scale(0.98);
+}
+
+.slider-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+input[type="range"] {
+    width: 150px;
+    accent-color: var(--primary-color);
+}
+
+.highlighted-text {
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: var(--secondary-color);
+    min-height: 100px;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+.initial-message {
+    color: #888;
+    text-align: center;
+    font-style: italic;
+}
+
+.word {
+    display: inline-block;
+    padding: 0 2px;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+}
+
+.highlighted {
+    background-color: var(--highlight-color);
+}
+
+/* Progress bar styles */
+.progress-container {
+    margin: 1rem 0;
+}
+
+.progress-bar-wrapper {
+    width: 100%;
+    height: 8px;
+    background-color: var(--progress-bg);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: var(--progress-fill);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.pulsing {
+    animation: pulse 1.5s infinite;
+}
+
+/* Settings panel styles */
+.settings-panel {
+    background-color: var(--settings-bg);
+    border: 1px solid var(--settings-border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.settings-panel h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.settings-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.settings-select {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin-left: 0.5rem;
+    flex-grow: 1;
+}
+
+.settings-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.settings-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.checkbox-label {
+    margin-left: 0.5rem;
+}
+
+.settings-info {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+body.dark-mode .settings-info {
+    color: #aaa;
+}
+
+.settings-status {
+    margin-left: 1rem;
+    font-size: 0.9rem;
+}
+
+/* Dark mode specific styles for select */
+body.dark-mode .voice-select {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+}
+
+body.dark-mode .voice-select option {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+body.dark-mode .settings-select {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+body.dark-mode .settings-select option {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* Loading indicator */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin-left: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .voice-container, .slider-container {
+        width: 100%;
+    }
+    
+    input[type="range"] {
+        width: 100%;
+    }
+    
+    .control-btn {
+        margin: 0.5rem 0;
+    }
+}

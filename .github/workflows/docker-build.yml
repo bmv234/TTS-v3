@@ -1,0 +1,125 @@
+name: Docker Build
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # We need to checkout the parent directory to access the CSM code
+          fetch-depth: 0
+
+      # Checkout the parent directory to access CSM code
+      - name: Checkout parent directory
+        run: |
+          cd ..
+          git clone https://github.com/SesameAILabs/csm.git || echo "CSM repo already exists"
+          ls -la
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-tts-v3
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,format=long
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      # Add NVIDIA Container Runtime labels
+      - name: Prepare Docker build arguments
+        id: prep
+        run: |
+          echo "::set-output name=buildargs::BUILDKIT_INLINE_CACHE=1"
+          echo "::set-output name=labels::com.nvidia.volumes.needed=nvidia_driver"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./TTS-v3
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: |
+            ${{ steps.meta.outputs.labels }}
+            com.nvidia.volumes.needed=nvidia_driver
+            com.nvidia.capabilities.gpu=compute,utility
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+
+      # Create and push a Docker Compose file that includes GPU support
+      - name: Prepare Docker Compose file
+        if: github.event_name != 'pull_request'
+        run: |
+          cat > docker-compose.prod.yml << EOF
+          version: '3.8'
+          
+          services:
+            tts-v3:
+              image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-tts-v3:latest
+              container_name: tts-v3
+              ports:
+                - "5000:5000"
+              volumes:
+                - huggingface_cache:/app/.cache/huggingface
+              environment:
+                - NO_TORCH_COMPILE=1
+                - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+                - DEFAULT_DEVICE=cuda
+              deploy:
+                resources:
+                  reservations:
+                    devices:
+                      - driver: nvidia
+                        count: 1
+                        capabilities: [gpu]
+              restart: unless-stopped
+          
+          volumes:
+            huggingface_cache:
+              driver: local
+          EOF
+          
+          echo "Created docker-compose.prod.yml:"
+          cat docker-compose.prod.yml
+
+      - name: Upload Docker Compose file as artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-compose-prod
+          path: docker-compose.prod.yml
