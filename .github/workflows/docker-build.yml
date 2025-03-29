@@ -63,8 +63,8 @@ jobs:
       - name: Prepare Docker build arguments
         id: prep
         run: |
-          echo "::set-output name=buildargs::BUILDKIT_INLINE_CACHE=1"
-          echo "::set-output name=labels::com.nvidia.volumes.needed=nvidia_driver"
+          echo "buildargs=BUILDKIT_INLINE_CACHE=1" >> $GITHUB_OUTPUT
+          echo "labels=com.nvidia.volumes.needed=nvidia_driver" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -119,7 +119,7 @@ jobs:
 
       - name: Upload Docker Compose file as artifact
         if: github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docker-compose-prod
           path: docker-compose.prod.yml
