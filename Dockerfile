@@ -40,9 +40,10 @@ COPY . .
 # Create a directory for CSM
 RUN mkdir -p /app/csm
 
-# Copy CSM code from parent directory (will be mounted in docker-compose)
-# This is just a placeholder for the Dockerfile
-RUN echo "CSM code will be mounted at runtime" > /app/csm/README.md
+# Clone the CSM repository directly into the container
+RUN apt-get update && apt-get install -y git && \
+    git clone https://github.com/SesameAILabs/csm.git /app/csm && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set up Hugging Face cache directory
 ENV HF_HOME=/app/.cache/huggingface

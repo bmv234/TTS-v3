@@ -5,8 +5,6 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ..:/app/parent
-      - ../csm:/app/csm
       - huggingface_cache:/app/.cache/huggingface
     environment:
       - NO_TORCH_COMPILE=1
